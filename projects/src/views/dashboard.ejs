@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="30">
+  <title>DevOps Service Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: #1f2937;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .ok {
+      color: #34d399;
+      font-weight: bold;
+    }
+
+    .bad {
+      color: #f87171;
+      font-weight: bold;
+    }
+
+    code, pre {
+      background: #0b1220;
+      padding: 8px;
+      border-radius: 8px;
+      display: block;
+      overflow-x: auto;
+    }
+
+    a {
+      color: #60a5fa;
+    }
+
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    .row {
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <h1>DevOps Service Dashboard</h1>
+  <p>Internal testing chamber and backend monitor</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Total Requests</h2>
+      <p><%= metrics.totalRequests %></p>
+    </div>
+
+    <div class="card">
+      <h2>2xx</h2>
+      <p class="ok"><%= metrics.status2xx %></p>
+    </div>
+
+    <div class="card">
+      <h2>4xx</h2>
+      <p><%= metrics.status4xx %></p>
+    </div>
+
+    <div class="card">
+      <h2>5xx</h2>
+      <p class="bad"><%= metrics.status5xx %></p>
+    </div>
+
+    <div class="card">
+      <h2>Avg Response</h2>
+      <p><%= metrics.avgResponseTimeMs %> ms</p>
+    </div>
+
+    <div class="card">
+      <h2>Cache Hits</h2>
+      <p class="ok"><%= metrics.cacheHits %></p>
+    </div>
+
+    <div class="card">
+      <h2>Cache Misses</h2>
+      <p><%= metrics.cacheMisses %></p>
+    </div>
+
+    <div class="card">
+      <h2>Created</h2>
+      <p><%= metrics.locationsCreated %></p>
+    </div>
+
+    <div class="card">
+      <h2>Service</h2>
+      <p><strong><%= serviceName %></strong></p>
+    </div>
+
+    <div class="card">
+      <h2>PostgreSQL</h2>
+      <p class="<%= postgresStatus === 'up' ? 'ok' : 'bad' %>"><%= postgresStatus %></p>
+    </div>
+
+    <div class="card">
+      <h2>Redis</h2>
+      <p class="<%= redisStatus === 'up' ? 'ok' : 'bad' %>"><%= redisStatus %></p>
+    </div>
+
+    <div class="card">
+      <h2>Locations</h2>
+      <p><%= locationCount %></p>
+    </div>
+
+    <div class="card">
+      <h2>Uptime</h2>
+      <p><%= uptimeSeconds %> seconds</p>
+    </div>
+
+    <div class="card">
+      <h2>Timestamp</h2>
+      <p><%= timestamp %></p>
+    </div>
+  </div>
+
+  <div class="row card">
+    <h2>Quick API Links</h2>
+    <p><a href="/health" target="_blank">GET /health</a></p>
+    <p><a href="/locations" target="_blank">GET /locations</a></p>
+  </div>
+
+  <div class="row card">
+    <h2>Create Location</h2>
+    <form id="locationForm">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="number" step="any" id="latitude" placeholder="Latitude" required />
+      <input type="number" step="any" id="longitude" placeholder="Longitude" required />
+      <textarea id="description" placeholder="Description"></textarea>
+      <button type="submit">Create</button>
+    </form>
+  </div>
+
+  <div class="row card">
+    <h2>Response</h2>
+    <pre id="output">Waiting for action...</pre>
+  </div>
+
+
+
+<div class="row card">
+  <h2>Recent Organ Logs</h2>
+  <% if (logs && logs.length > 0) { %>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:1px solid #374151;">Time</th>
+            <th style="text-align:left; padding:8px; border-bottom:1px solid #374151;">Source</th>
+            <th style="text-align:left; padding:8px; border-bottom:1px solid #374151;">Level</th>
+            <th style="text-align:left; padding:8px; border-bottom:1px solid #374151;">Message</th>
+            <th style="text-align:left; padding:8px; border-bottom:1px solid #374151;">Meta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.forEach((log) => { %>
+            <tr>
+              <td style="padding:8px; border-bottom:1px solid #1f2937;"><%= log.timestamp %></td>
+              <td style="padding:8px; border-bottom:1px solid #1f2937;"><%= log.source %></td>
+              <td style="padding:8px; border-bottom:1px solid #1f2937;">
+                <span class="<%= log.level === 'error' ? 'bad' : log.level === 'warn' ? 'bad' : 'ok' %>">
+                  <%= log.level %>
+                </span>
+              </td>
+              <td style="padding:8px; border-bottom:1px solid #1f2937;"><%= log.message %></td>
+              <td style="padding:8px; border-bottom:1px solid #1f2937;">
+                <pre style="margin:0;"><%= JSON.stringify(log.meta, null, 2) %></pre>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <p>No logs yet.</p>
+  <% } %>
+</div>
+
+  <script>
+    const form = document.getElementById('locationForm');
+    const output = document.getElementById('output');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const payload = {
+        name: document.getElementById('name').value,
+        latitude: Number(document.getElementById('latitude').value),
+        longitude: Number(document.getElementById('longitude').value),
+        description: document.getElementById('description').value
+      };
+
+      const response = await fetch('/locations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      output.textContent = JSON.stringify(data, null, 2);
+    });
+  </script>
+
+</body>
+</html>

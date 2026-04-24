@@ -1,0 +1,12 @@
+Mar 10 10:01:01 server sshd[111]: Failed password for root from 185.22.10.44 port 52210 ssh2
+Mar 10 10:01:02 server sshd[112]: Failed password for invalid user admin from 185.22.10.44 port 52211 ssh2
+Mar 10 10:01:03 server sshd[113]: Invalid user oracle from 91.10.2.55 port 52212
+Mar 10 10:01:04 server sshd[114]: Failed password for root from 185.22.10.44 port 52213 ssh2
+Mar 10 10:01:05 server sshd[115]: Failed password for root from 185.22.10.44 port 52214 ssh2
+Mar 10 10:01:06 server sshd[116]: Failed password for root from 185.22.10.44 port 52215 ssh2
+Mar 10 10:01:07 server sshd[117]: Failed password for root from 185.22.10.44 port 52216 ssh2
+Mar 10 10:01:08 server sshd[118]: Failed password for root from 185.22.10.44 port 52217 ssh2
+Mar 10 10:01:09 server sshd[119]: Failed password for root from 185.22.10.44 port 52218 ssh2
+Mar 10 10:01:10 server sshd[120]: Failed password for root from 185.22.10.44 port 52219 ssh2
+Mar 10 10:01:11 server sshd[121]: Failed password for root from 185.22.10.44 port 52220 ssh2
+Mar 10 10:01:12 server sshd[122]: Failed password for root from 185.22.10.44 port 52221 ssh2

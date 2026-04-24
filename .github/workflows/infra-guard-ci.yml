@@ -1,0 +1,37 @@
+name: Infra Guard CI
+
+on:
+  push:
+    paths:
+      - "projects/infra-guard/**"
+      - ".github/workflows/infra-guard-ci.yml"
+  pull_request:
+    paths:
+      - "projects/infra-guard/**"
+      - ".github/workflows/infra-guard-ci.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: projects/infra-guard
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install project
+        run: pip install -e .
+
+      - name: Run sample auth scan
+        run: python -m infra_guard.cli --file samples/auth.log --type auth --dry-run
+
+      - name: Run sample nginx scan
+        run: python -m infra_guard.cli --file samples/nginx-access.log --type nginx --dry-run
