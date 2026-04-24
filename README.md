@@ -12,6 +12,9 @@ This repository is designed to show how I approach real-world engineering proble
 - packaging and delivering services through CI/CD pipelines
 
 ## Projects
+- [DevOps Service Stack](projects/devops-service-stack)
+- [Infra Guard](projects/infra-guard)
+- [Delivery Layer](delivery)
 
 ### 1. DevOps Service Stack
 
