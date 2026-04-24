@@ -1,6 +1,7 @@
 name: Publish Service Stack Image
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
