@@ -40,6 +40,8 @@ dry-run response design - CLI tooling - operational reporting
 
 ## 3. Delivery Layer
 
+The deployment layer includes a repeatable database migration step. This avoids relying only on Docker's first-boot Postgres init behavior, which only runs when the database volume is first created.
+
 CI/CD and deployment workflows for the portfolio projects.
 
 Demonstrates: - GitHub Actions - Docker image builds - image
