@@ -83,13 +83,3 @@ Open: http://localhost:3000/dashboard
 cd projects/infra-guard
 python -m infra_guard.cli --file samples/auth.log --type auth --dry-run
 ```
-
-## Portfolio Narrative
-
-This portfolio presents me as a DevOps / Platform Engineer with
-practical experience in Linux systems, backend services, automation, and
-operational reliability.
-
-The projects are intentionally small, but built with production-oriented
-thinking: clear logs, health checks, safe automation, repeatable
-deployment, and maintainable structure.
